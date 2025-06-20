@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: bf393513565f4164ba1feb306fa97062
+    path: Assets/Scenes/MenuDesvipula.unity
+    guid: 7a6090f4c77daf844b1134a6aa9aaf63
   - enabled: 1
-    path: Assets/Scenes/Gameplay.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/GameDesvipula.unity
+    guid: a2ed8edbc68397d4197dc6b1a813e058
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
