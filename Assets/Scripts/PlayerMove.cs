@@ -22,12 +22,12 @@ public class PlayerMove : MonoBehaviour
     [Tooltip("How fast the player moves left/right")]
     public float dodgeSpeed = 5;
 
-    public enum MobileHorizMovement
+    public enum MobileMovement
     {
         Accelerometer, ScreenTouch
     }
     [Tooltip("What horizontal movement type should be used")]
-    public MobileHorizMovement horizMovement = MobileHorizMovement.Accelerometer;
+    public MobileMovement mobileMove = MobileMovement.Accelerometer;
 
     [Header("Swipe Properties")]
     [Tooltip("How far must the player swipe before we will execute the action (in inches)")]
@@ -48,6 +48,12 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float queueJumpTime = 0.2f;
     float groundDetectionSphereRadius;
     Vector3 groundDetectionSpherePos;
+
+    private bool isAlive = true;
+
+    private float previousYAcceleration = 0f;
+    private float currentYAcceleration;
+    [SerializeField] private float accelerometerJumpThreshold = 0.5f;
 
     void Start()
     {
@@ -72,29 +78,29 @@ public class PlayerMove : MonoBehaviour
             var screenPos = Input.mousePosition;
             horizontalSpeed = CalculateMovement(screenPos);
         }
-        
+
         // Check if we are running on mobile devices
 #elif UNITY_IOS || UNITY_ANDROID
             
-            switch (horizMovement) 
-            { 
-                case MobileHorizMovement.Accelerometer: 
-                    /* Move player based on accelerometer 
-                    direction */
-                    horizontalSpeed = Input.acceleration.x * dodgeSpeed; 
-                    break; 
-                case MobileHorizMovement.ScreenTouch: 
-                    /* Check if Input registered more than 
-                    zero touches */
-                    if (Input.touchCount > 0) 
-                    { 
-                        /* Store the first touch detected */
-                        var firstTouch = Input.touches [0]; 
-                        var screenPos = firstTouch.position; 
-                        horizontalSpeed = CalculateMovement(screenPos);
-                    } 
-                    break;
-            }
+        switch (mobileMove) 
+        { 
+            case MobileHorizMovement.Accelerometer: 
+                /* Move player based on accelerometer 
+                direction */
+                horizontalSpeed = Input.acceleration.x * dodgeSpeed; 
+                break; 
+            case MobileHorizMovement.ScreenTouch: 
+                /* Check if Input registered more than 
+                zero touches */
+                if (Input.touchCount > 0) 
+                { 
+                    /* Store the first touch detected */
+                    var firstTouch = Input.touches[0]; 
+                    var screenPos = firstTouch.position; 
+                    horizontalSpeed = CalculateMovement(screenPos);
+                } 
+                break;
+        }
 
 #endif
 
@@ -107,7 +113,7 @@ public class PlayerMove : MonoBehaviour
     /// </summary> 
     private void Update()
     {
-        groundDetectionSpherePos = transform.position + Vector3.down * (transform.localScale.y) * 0.6f;
+        groundDetectionSpherePos = transform.position + Vector3.down * transform.localScale.y * 0.6f;
         /* Check if we are running either in the Unity editor or in a 
         * standalone build.*/
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
@@ -122,21 +128,30 @@ public class PlayerMove : MonoBehaviour
         }
         if ((Input.GetKeyDown(KeyCode.Space) || queuedJump) && isGrounded)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, 0);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            queuedJump = false;
+            Jump();
         }
         /* Check if we are running on a mobile device */
 #elif UNITY_IOS || UNITY_ANDROID
-            /* Check if Input has registered more than 
-            zero touches */
-            if (Input.touchCount > 0) 
-            { 
-                /* Store the first touch detected */
-                Touch touch = Input.touches[0]; 
-                SwipeTeleport(touch);
-                ScalePlayer(); 
-            } 
+        /* Check if Input has registered more than 
+        zero touches */
+        switch(mobileMove)
+        {
+            case MobileHorizMovement.Accelerometer:
+                currentYAcceleration = Input.acceleration.y;
+                if(currentYAcceleration - previousYAcceleration >= accelerometerJumpThreshold)
+                {
+                    Jump();
+                }
+                break;
+            case MobileHorizMovement.ScreenTouch:
+                if (Input.touchCount > 0) 
+                { 
+                    /* Store the first touch detected */
+                    Touch touch = Input.touches[0]; 
+                    SwipeJump(touch);
+                }
+                break;
+        }
 #endif
     }
 
@@ -171,11 +186,10 @@ public class PlayerMove : MonoBehaviour
 
 
     /// <summary> 
-    /// Will teleport the player if swiped to the left or 
-    /// right 
+    /// Player will jump if swiped up
     /// </summary> 
     /// <param name="touch">Current touch event</param>
-    private void SwipeTeleport(Touch touch)
+    private void SwipeJump(Touch touch)
     {
         /* Check if the touch just started */
         if (touch.phase == TouchPhase.Began)
@@ -193,23 +207,29 @@ public class PlayerMove : MonoBehaviour
             float y = touchEnd.y - touchStart.y;
 
             /* If not moving far enough, don't do the 
-            teleport */
+            jump */
             if (Mathf.Abs(y) < minSwipeDistancePixels)
             {
                 return;
             }
 
-            /* If moved negatively in the x axis, move 
-            left */
+            /* If moved negatively in the y axis, return */
             if (y <= 0)
             {
                 return;
             }
 
             //Jump
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Jump();
 
         }
+    }
+
+    private void Jump()
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, 0);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        queuedJump = false;
     }
 
     IEnumerator queueJump()
@@ -222,5 +242,18 @@ public class PlayerMove : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundDetectionSpherePos, groundDetectionSphereRadius);
+    }
+
+    public bool IsPlayerAlive()
+    {
+        return isAlive;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Obstacle")
+        {
+            isAlive = false;
+        }
     }
 }
