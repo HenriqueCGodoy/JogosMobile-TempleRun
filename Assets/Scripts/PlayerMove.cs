@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -42,19 +43,27 @@ public class PlayerMove : MonoBehaviour
     /// </summary> 
     private Vector2 touchStart;
 
+    [SerializeField] private bool isGrounded = false;
+    [SerializeField] private bool queuedJump = false;
+    [SerializeField] private float queueJumpTime = 0.2f;
+    float groundDetectionSphereRadius;
+    Vector3 groundDetectionSpherePos;
+
     void Start()
     {
         //Get access to the Rigidbody component
         rb = GetComponent<Rigidbody>();
 
         minSwipeDistancePixels = minSwipeDistance * Screen.dpi;
+
+        groundDetectionSphereRadius = GetComponent<CapsuleCollider>().radius * 0.9f;
     }
 
     void FixedUpdate()
     {
         //Check if we're moving to the side
         var horizontalSpeed = Input.GetAxis("Horizontal") * dodgeSpeed;
-
+        isGrounded = Physics.CheckSphere(groundDetectionSpherePos, groundDetectionSphereRadius, ~LayerMask.NameToLayer("Ground"));
         // Check if we are running either in the Unity editor or in a standalone build
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
         //If the mouse is being held down
@@ -63,6 +72,7 @@ public class PlayerMove : MonoBehaviour
             var screenPos = Input.mousePosition;
             horizontalSpeed = CalculateMovement(screenPos);
         }
+        
         // Check if we are running on mobile devices
 #elif UNITY_IOS || UNITY_ANDROID
             
@@ -97,6 +107,7 @@ public class PlayerMove : MonoBehaviour
     /// </summary> 
     private void Update()
     {
+        groundDetectionSpherePos = transform.position + Vector3.down * (transform.localScale.y) * 0.6f;
         /* Check if we are running either in the Unity editor or in a 
         * standalone build.*/
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
@@ -104,6 +115,16 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 screenPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+        {
+            StartCoroutine(queueJump());
+        }
+        if ((Input.GetKeyDown(KeyCode.Space) || queuedJump) && isGrounded)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, 0);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            queuedJump = false;
         }
         /* Check if we are running on a mobile device */
 #elif UNITY_IOS || UNITY_ANDROID
@@ -188,10 +209,18 @@ public class PlayerMove : MonoBehaviour
             //Jump
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-
-
-
         }
     }
 
+    IEnumerator queueJump()
+    {
+        queuedJump = true;
+        yield return new WaitForSeconds(queueJumpTime);
+        queuedJump = false;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(groundDetectionSpherePos, groundDetectionSphereRadius);
+    }
 }

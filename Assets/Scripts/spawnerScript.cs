@@ -6,12 +6,13 @@ public class spawnerScript : MonoBehaviour
 {
     [SerializeField] private List<GameObject> obstaclePrefabs;
     [SerializeField] private List<Vector3> spawnPositions;
-    private Dictionary<int, int> occupiedPositions;
+    private Dictionary<int, int> occupiedPositions = new Dictionary<int, int>();
     private int spawnPositionsLength;
     private int obstaclePrefabsLength;
 
     [SerializeField] private float spawnDelayTime;
     [SerializeField] private float beginDelayTime;
+    [SerializeField] private float obstacleLifetime = 5f;
 
     void Start()
     {
@@ -32,27 +33,43 @@ public class spawnerScript : MonoBehaviour
         RandomizeObstaclesAndPositions();
         foreach (KeyValuePair<int, int> pair in occupiedPositions)
         {
-            Instantiate(obstaclePrefabs[pair.Value], spawnPositions[pair.Key], Quaternion.identity);
+            float correctXPos = spawnPositions[pair.Key].x;
+            float correctYPos = CalculateYPosition(obstaclePrefabs[pair.Value]);
+            float correctZPos = spawnPositions[pair.Key].z;
+            Vector3 correctPos = new Vector3(correctXPos, correctYPos, correctZPos);
+            GameObject newObstacle = Instantiate(obstaclePrefabs[pair.Value], correctPos, Quaternion.identity);
+            Destroy(newObstacle, obstacleLifetime);
+
         }
+        occupiedPositions.Clear();
     }
 
     private void RandomizeObstaclesAndPositions()
     {
         int numOfObstacles = RandomizeElement(spawnPositionsLength) + 1;
+        Debug.Log("numObstacles: " + numOfObstacles);
         for (int i = 1; i <= numOfObstacles; i++)
         {
-            int randomizedPositionIndex;
+            int randomizedPositionIndex = RandomizeElement(spawnPositionsLength);
             int randomizedPrefabIndex = RandomizeElement(obstaclePrefabsLength);
-            do
+            if (i != 1)
             {
-                randomizedPositionIndex = RandomizeElement(spawnPositionsLength);
-            } while (occupiedPositions.ContainsKey(randomizedPositionIndex));
+                while (occupiedPositions.ContainsKey(randomizedPositionIndex))
+                {
+                    randomizedPositionIndex = RandomizeElement(spawnPositionsLength);
+                }
+            }
             occupiedPositions.Add(randomizedPositionIndex, randomizedPrefabIndex);
         }
     }
 
     private int RandomizeElement(int quantityOfElements)
     {
-        return Random.Range(0, quantityOfElements - 1);
+        return Random.Range(0, quantityOfElements);
+    }
+
+    private float CalculateYPosition(GameObject obj)
+    {
+        return obj.transform.localScale.y / 2;
     }
 }

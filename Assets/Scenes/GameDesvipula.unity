@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16168995, y: 0, z: 0, w: 0.9868416}
-  m_LocalPosition: {x: 0, y: 4.47, z: -6.76}
+  m_LocalPosition: {x: 0, y: 5.8, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -348,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 6.8300004, z: 1.2600002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -420,7 +420,7 @@ Transform:
   m_GameObject: {fileID: 832575517}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 3.8300004, z: 1.2600002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 1013598811}
   - component: {fileID: 1013598810}
   - component: {fileID: 1013598809}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -528,8 +528,8 @@ Transform:
   m_GameObject: {fileID: 1013598808}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.1, z: 0}
-  m_LocalScale: {x: 10, y: 0.1, z: 50}
+  m_LocalPosition: {x: 0, y: -0.5, z: 1.2600002}
+  m_LocalScale: {x: 10, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1710527612}
@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 1014293209}
   - component: {fileID: 1014293208}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: WallRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -636,7 +636,7 @@ Transform:
   m_GameObject: {fileID: 1014293207}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.5, y: 1, z: 0}
+  m_LocalPosition: {x: -5.5, y: 5, z: 1.2600002}
   m_LocalScale: {x: 1, y: 10, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -671,10 +671,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7510256434e19445a8677887ea8f914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstaclePrefabs: []
-  spawnPositions: []
+  obstaclePrefabs:
+  - {fileID: 6509443207408059316, guid: 0f89eb2859304f44b9c6dd7c46d18d58, type: 3}
+  - {fileID: 3512838313124027311, guid: 08d0f1e3aa556784da25b354ee85bb5c, type: 3}
+  - {fileID: 1868593122729649233, guid: 7546f5ac2dc650a40819a588c95d1ebf, type: 3}
+  - {fileID: 1918983526271738201, guid: bba311a762ed42a4685ae437e3028b86, type: 3}
+  spawnPositions:
+  - {x: -3.333333, y: 0, z: 26}
+  - {x: 0, y: 0, z: 26}
+  - {x: 3.333333, y: 0, z: 26}
   spawnDelayTime: 2
   beginDelayTime: 2
+  obstacleLifetime: 5
 --- !u!4 &1054212863
 Transform:
   m_ObjectHideFlags: 0
@@ -703,7 +711,7 @@ GameObject:
   - component: {fileID: 1175582677}
   - component: {fileID: 1175582676}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: WallLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -792,7 +800,7 @@ Transform:
   m_GameObject: {fileID: 1175582675}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.5, y: 1, z: 0}
+  m_LocalPosition: {x: 5.5, y: 5, z: 1.2600002}
   m_LocalScale: {x: 1, y: 10, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -863,7 +871,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -965,7 +973,7 @@ Transform:
   m_GameObject: {fileID: 1754045780}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.1, z: 1.2600002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -983,10 +991,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe119ee9712ceaa4ebe7bf3b689e1462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 0
-  dodgeSpeed: 5
+  jumpForce: 10
+  dodgeSpeed: 10
   horizMovement: 0
   minSwipeDistance: 0.25
+  isGrounded: 0
+  queuedJump: 0
+  queueJumpTime: 0.2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
