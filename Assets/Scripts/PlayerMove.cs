@@ -137,8 +137,12 @@ public class PlayerMove : MonoBehaviour
         switch(mobileMove)
         {
             case MobileMovement.Accelerometer:
-                currentYAcceleration = Input.acceleration.y;
-                if(Mathf.Abs(currentYAcceleration - previousYAcceleration) >= accelerometerJumpThreshold)
+                bool tryJump = (Input.acceleration.z >= accelerometerJumpThreshold)?true:false;
+                if (tryJump && !isGrounded)
+                {
+                    StartCoroutine(queueJump());
+                }
+                if((tryJump || queuedJump) && isGrounded)
                 {
                     Jump();
                 }
@@ -219,8 +223,19 @@ public class PlayerMove : MonoBehaviour
                 return;
             }
 
-            //Jump
-            Jump();
+            if (isGrounded && queuedJump)
+            {
+                Jump();
+                return;
+            }
+            if (!isGrounded)
+            {
+                StartCoroutine(queueJump());
+            }
+            if (isGrounded)
+            {
+                Jump();
+            }
 
         }
     }

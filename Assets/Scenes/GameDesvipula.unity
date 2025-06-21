@@ -3291,7 +3291,7 @@ MonoBehaviour:
   isGrounded: 0
   queuedJump: 0
   queueJumpTime: 0.2
-  accelerometerJumpThreshold: 3
+  accelerometerJumpThreshold: 0.2
 --- !u!1 &1810811469
 GameObject:
   m_ObjectHideFlags: 0

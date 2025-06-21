@@ -22,11 +22,20 @@ public class GameControllerScript : MonoBehaviour
         playerScript = playerRef.GetComponent<PlayerMove>();
         scoreText = timeScoreTextObj.GetComponent<TextMeshProUGUI>();
 
-        accelerometerToggle.isOn = persistOptionsBetweenRestarts.Instance.accelerometerState;
     }
 
     void Update()
     {
+        accelerometerToggle.isOn = persistOptionsBetweenRestarts.Instance.accelerometerState;
+        if (accelerometerToggle.isOn)
+        {
+            playerScript.mobileMove = PlayerMove.MobileMovement.Accelerometer;
+        }
+        else
+        {
+            playerScript.mobileMove = PlayerMove.MobileMovement.ScreenTouch;
+        }
+
         //Player is dead
         if (!playerScript.IsPlayerAlive())
         {
