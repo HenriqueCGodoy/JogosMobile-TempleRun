@@ -54,6 +54,7 @@ public class PlayerMove : MonoBehaviour
     private float previousYAcceleration = 0f;
     private float currentYAcceleration;
     [SerializeField] private float accelerometerJumpThreshold = 3;
+    private bool canStartQueueJumpCoroutine = true;
 
     void Start()
     {
@@ -122,7 +123,7 @@ public class PlayerMove : MonoBehaviour
         {
             Vector2 screenPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space)&& canStartQueueJumpCoroutine && !isGrounded)
         {
             StartCoroutine(queueJump());
         }
@@ -138,7 +139,7 @@ public class PlayerMove : MonoBehaviour
         {
             case MobileMovement.Accelerometer:
                 bool tryJump = (Input.acceleration.z >= accelerometerJumpThreshold)?true:false;
-                if (tryJump && !isGrounded)
+                if (tryJump && canStartQueueJumpCoroutine && !isGrounded)
                 {
                     StartCoroutine(queueJump());
                 }
@@ -228,7 +229,7 @@ public class PlayerMove : MonoBehaviour
                 Jump();
                 return;
             }
-            if (!isGrounded)
+            if (!isGrounded && canStartQueueJumpCoroutine)
             {
                 StartCoroutine(queueJump());
             }
@@ -250,8 +251,10 @@ public class PlayerMove : MonoBehaviour
     IEnumerator queueJump()
     {
         queuedJump = true;
+        canStartQueueJumpCoroutine = false;
         yield return new WaitForSeconds(queueJumpTime);
         queuedJump = false;
+        canStartQueueJumpCoroutine = true;
     }
 
     void OnDrawGizmos()

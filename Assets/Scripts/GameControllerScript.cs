@@ -65,12 +65,14 @@ public class GameControllerScript : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0;
+        playerScript.enabled = false;
         pausePanel.SetActive(true);
         pauseButton.SetActive(false);
     }
 
     public void Unpause()
     {
+        playerScript.enabled = true;
         Time.timeScale = 1;
         pausePanel.SetActive(false);
         pauseButton.SetActive(true);
