@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameControllerScript : MonoBehaviour
 {
@@ -13,12 +14,15 @@ public class GameControllerScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject pauseButton;
+    [SerializeField] private Toggle accelerometerToggle;
 
     void Start()
     {
         Time.timeScale = 1;
         playerScript = playerRef.GetComponent<PlayerMove>();
         scoreText = timeScoreTextObj.GetComponent<TextMeshProUGUI>();
+
+        accelerometerToggle.isOn = persistOptionsBetweenRestarts.Instance.accelerometerState;
     }
 
     void Update()
@@ -76,8 +80,14 @@ public class GameControllerScript : MonoBehaviour
     public void AccelerometerToggle(bool selected)
     {
         if (selected)
+        {
             playerScript.mobileMove = PlayerMove.MobileMovement.Accelerometer;
+            persistOptionsBetweenRestarts.Instance.accelerometerState = true;
+        }
         else
+        {
             playerScript.mobileMove = PlayerMove.MobileMovement.ScreenTouch;
+            persistOptionsBetweenRestarts.Instance.accelerometerState = false;
+        }
     }
 }

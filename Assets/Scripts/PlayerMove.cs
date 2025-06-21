@@ -53,7 +53,7 @@ public class PlayerMove : MonoBehaviour
 
     private float previousYAcceleration = 0f;
     private float currentYAcceleration;
-    [SerializeField] private float accelerometerJumpThreshold = 0.5f;
+    [SerializeField] private float accelerometerJumpThreshold = 3;
 
     void Start()
     {
@@ -84,12 +84,12 @@ public class PlayerMove : MonoBehaviour
             
         switch (mobileMove) 
         { 
-            case MobileHorizMovement.Accelerometer: 
+            case MobileMovement.Accelerometer: 
                 /* Move player based on accelerometer 
                 direction */
                 horizontalSpeed = Input.acceleration.x * dodgeSpeed; 
                 break; 
-            case MobileHorizMovement.ScreenTouch: 
+            case MobileMovement.ScreenTouch: 
                 /* Check if Input registered more than 
                 zero touches */
                 if (Input.touchCount > 0) 
@@ -136,14 +136,14 @@ public class PlayerMove : MonoBehaviour
         zero touches */
         switch(mobileMove)
         {
-            case MobileHorizMovement.Accelerometer:
+            case MobileMovement.Accelerometer:
                 currentYAcceleration = Input.acceleration.y;
-                if(currentYAcceleration - previousYAcceleration >= accelerometerJumpThreshold)
+                if(Mathf.Abs(currentYAcceleration - previousYAcceleration) >= accelerometerJumpThreshold)
                 {
                     Jump();
                 }
                 break;
-            case MobileHorizMovement.ScreenTouch:
+            case MobileMovement.ScreenTouch:
                 if (Input.touchCount > 0) 
                 { 
                     /* Store the first touch detected */
