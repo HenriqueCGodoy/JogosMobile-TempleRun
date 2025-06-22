@@ -56,12 +56,11 @@ public class GameControllerScript : MonoBehaviour
             GameOver();
         }
 
-        InvokeRepeating("UpdateUI", 0, 0.1f * Time.deltaTime);
+        UpdateUI();
     }
 
     private void GameOver()
     {
-        CancelInvoke("UpdateUI");
         Time.timeScale = 0;
 
         timeScoreTextObj.SetActive(false);

@@ -794,7 +794,6 @@ MonoBehaviour:
   - {x: -3.333333, y: 0, z: 50}
   - {x: 0, y: 0, z: 50}
   - {x: 3.333333, y: 0, z: 50}
-  alwaysSpawnMaxObstacles: 1
   destroyZPosition: -8
   spawnDelayTime: 5
 --- !u!114 &317913319
@@ -3294,6 +3293,7 @@ MonoBehaviour:
   queuedJump: 0
   queueJumpTime: 0.2
   accelerometerJumpThreshold: 0.2
+  extraDownForce: 10
 --- !u!1 &1810811469
 GameObject:
   m_ObjectHideFlags: 0

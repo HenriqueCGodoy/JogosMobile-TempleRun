@@ -51,10 +51,9 @@ public class PlayerMove : MonoBehaviour
 
     private bool isAlive = true;
 
-    private float previousYAcceleration = 0f;
-    private float currentYAcceleration;
     [SerializeField] private float accelerometerJumpThreshold = 3;
     private bool canStartQueueJumpCoroutine = true;
+    [SerializeField] private float extraDownForce = 0.5f;
 
     void Start()
     {
@@ -107,6 +106,11 @@ public class PlayerMove : MonoBehaviour
 
 
         rb.AddForce(horizontalSpeed, 0, 0, ForceMode.Force);
+
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.AddForce(0, -extraDownForce, 0);
+        }
     }
 
     /// <summary> 
