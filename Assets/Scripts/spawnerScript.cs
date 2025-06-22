@@ -14,7 +14,8 @@ public class spawnerScript : MonoBehaviour
     [SerializeField] private float destroyZPosition;
 
     //Timers
-    [SerializeField] private float spawnDelayTime;
+    public float initialSpawnDelayTime;
+    public float spawnDelayTime;
     private float spawnDelayTimeAccumulator = 0f;
 
     void Start()
@@ -23,6 +24,7 @@ public class spawnerScript : MonoBehaviour
         obstaclePrefabsLength = obstaclePrefabs.Count;
         if (spawnPositionsLength != 0 && obstaclePrefabsLength != 0)
             canStart = true;
+        initialSpawnDelayTime = spawnDelayTime;
     }
 
     void Update()

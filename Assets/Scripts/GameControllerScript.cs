@@ -9,9 +9,12 @@ public class GameControllerScript : MonoBehaviour
     private float score = 0;
     [SerializeField] private float obstaclesInitialSpeed = 5;
     [SerializeField] public float difficultyIncreasePerSec = 0.02f;
+    [SerializeField] private float maxDifficulty = 5f;
+    private float CurrentDifficulty = 1f;
     public float obstaclesCurrentSpeed;
     [SerializeField] private GameObject playerRef;
     private PlayerMove playerScript;
+    private spawnerScript spawnerScript;
     [SerializeField] private GameObject timeScoreTextObj;
     private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject gameOverPanel;
@@ -19,7 +22,7 @@ public class GameControllerScript : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private Toggle accelerometerToggle;
-    
+    private float timeSum = 0f;
 
     void Awake()
     {
@@ -33,6 +36,7 @@ public class GameControllerScript : MonoBehaviour
     {
         Time.timeScale = 1;
         playerScript = playerRef.GetComponent<PlayerMove>();
+        spawnerScript = GetComponent<spawnerScript>();
         scoreText = timeScoreTextObj.GetComponent<TextMeshProUGUI>();
         obstaclesCurrentSpeed = obstaclesInitialSpeed;
 
@@ -57,6 +61,24 @@ public class GameControllerScript : MonoBehaviour
         }
 
         UpdateUI();
+
+        timeSum += Time.deltaTime;
+        if (timeSum >= 1)
+        {
+            timeSum = 0f;
+            score += 1;
+            if (CurrentDifficulty <= maxDifficulty)
+            {
+                CurrentDifficulty += difficultyIncreasePerSec;
+                DifficultyIncreased();
+            }
+        }
+    }
+
+    private void DifficultyIncreased()
+    {
+        obstaclesCurrentSpeed = obstaclesInitialSpeed * CurrentDifficulty;
+        spawnerScript.spawnDelayTime = spawnerScript.initialSpawnDelayTime * (1/CurrentDifficulty);
     }
 
     private void GameOver()
@@ -71,7 +93,6 @@ public class GameControllerScript : MonoBehaviour
 
     private void UpdateUI()
     {
-        score = Mathf.Round(Time.timeSinceLevelLoad);
         scoreText.text = "Time score:\n" + score + "s";
     }
 

@@ -795,6 +795,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 50}
   - {x: 3.333333, y: 0, z: 50}
   destroyZPosition: -8
+  initialSpawnDelayTime: 0
   spawnDelayTime: 5
 --- !u!114 &317913319
 MonoBehaviour:
@@ -809,7 +810,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstaclesInitialSpeed: 5
-  difficultyIncreasePerSec: 0.02
+  difficultyIncreasePerSec: 0.05
+  maxDifficulty: 5
   obstaclesCurrentSpeed: 0
   playerRef: {fileID: 1754045780}
   timeScoreTextObj: {fileID: 150902101}
