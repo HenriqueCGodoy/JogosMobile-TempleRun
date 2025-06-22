@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class spawnerScript : MonoBehaviour
 {
     [SerializeField] private List<GameObject> obstaclePrefabs;
     [SerializeField] private List<Vector3> spawnPositions;
-    private Dictionary<int, int> occupiedPositions = new Dictionary<int, int>();
+    private List<int> obstacles = new List<int>();
     private int spawnPositionsLength;
     private int obstaclePrefabsLength;
-    [SerializeField] private bool alwaysSpawnMaxObstacles = false;
     private bool canStart = false;
     [SerializeField] private float destroyZPosition;
 
@@ -42,41 +42,30 @@ public class spawnerScript : MonoBehaviour
 
     private void SpawnObstacles()
     {
-        RandomizeObstaclesAndPositions();
-        foreach (KeyValuePair<int, int> pair in occupiedPositions)
+        RandomizeObstacles();
+        int positionIndex = 0;
+        foreach (int obstacleIndex in obstacles)
         {
-            float correctXPos = spawnPositions[pair.Key].x;
-            float correctYPos = CalculateYPosition(obstaclePrefabs[pair.Value]);
-            float correctZPos = spawnPositions[pair.Key].z;
+            GameObject chosenObstacle = obstaclePrefabs[obstacleIndex];
+            float correctXPos = spawnPositions[positionIndex].x;
+            float correctYPos = CalculateYPosition(chosenObstacle);
+            float correctZPos = spawnPositions[positionIndex].z;
             Vector3 correctPos = new Vector3(correctXPos, correctYPos, correctZPos);
-            GameObject instantiatedObstacle = Instantiate(obstaclePrefabs[pair.Value], correctPos, Quaternion.identity);
+            GameObject instantiatedObstacle = Instantiate(chosenObstacle, correctPos, Quaternion.identity);
             instantiatedObstacle.AddComponent(typeof(ObstacleMove));
             instantiatedObstacle.AddComponent(typeof(destroyObstacle));
             instantiatedObstacle.GetComponent<destroyObstacle>().SetDestroyPosition(destroyZPosition);
+            positionIndex++;
         }
-        occupiedPositions.Clear();
+        
+        obstacles.Clear();
     }
 
-    private void RandomizeObstaclesAndPositions()
+    private void RandomizeObstacles()
     {
-        int numOfObstacles;
-        if (alwaysSpawnMaxObstacles)
-            numOfObstacles = spawnPositionsLength;
-        else
-            numOfObstacles = RandomizeElement(spawnPositionsLength) + 1;
-        Debug.Log("numObstacles: " + numOfObstacles);
-        for (int i = 1; i <= numOfObstacles; i++)
+        for (int i = 0; i < spawnPositionsLength; i++)
         {
-            int randomizedPositionIndex = RandomizeElement(spawnPositionsLength);
-            int randomizedPrefabIndex = RandomizeElement(obstaclePrefabsLength);
-            if (i != 1)
-            {
-                while (occupiedPositions.ContainsKey(randomizedPositionIndex))
-                {
-                    randomizedPositionIndex = RandomizeElement(spawnPositionsLength);
-                }
-            }
-            occupiedPositions.Add(randomizedPositionIndex, randomizedPrefabIndex);
+            obstacles.Add(RandomizeElement(obstaclePrefabsLength));
         }
     }
 
