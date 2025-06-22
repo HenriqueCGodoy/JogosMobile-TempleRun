@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3934989962927451994}
   - component: {fileID: 1769612022457983511}
   - component: {fileID: 6703634183161650497}
-  - component: {fileID: 5032539357618417182}
   m_Layer: 0
   m_Name: SmallWall
   m_TagString: Obstacle
@@ -109,16 +108,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5032539357618417182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3512838313124027311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17036243879fb3f4da71ec6055d2177b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 927117737724324416}
   - component: {fileID: 2903948997427103117}
   - component: {fileID: 6270289522389445651}
-  - component: {fileID: 1089390239880073778}
   - component: {fileID: 7941069292132761565}
   m_Layer: 0
   m_Name: UpDownWall
@@ -110,19 +109,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1089390239880073778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1918983526271738201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17036243879fb3f4da71ec6055d2177b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
 --- !u!114 &7941069292132761565
 MonoBehaviour:
   m_ObjectHideFlags: 0

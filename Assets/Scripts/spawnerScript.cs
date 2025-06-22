@@ -9,45 +9,35 @@ public class spawnerScript : MonoBehaviour
     private Dictionary<int, int> occupiedPositions = new Dictionary<int, int>();
     private int spawnPositionsLength;
     private int obstaclePrefabsLength;
-
-    [SerializeField] private float spawnDelayTime;
-    [SerializeField] private float beginDelayTime;
-    [SerializeField] private float obstacleLifetime = 5f;
-
     [SerializeField] private bool alwaysSpawnMaxObstacles = false;
+    private bool canStart = false;
+    [SerializeField] private float destroyZPosition;
 
-    private bool beginSpawning = false;
-    private bool canSpawnObstacle = true;
+    //Timers
+    [SerializeField] private float spawnDelayTime;
+    private float spawnDelayTimeAccumulator = 0f;
 
     void Start()
     {
         spawnPositionsLength = spawnPositions.Count;
         obstaclePrefabsLength = obstaclePrefabs.Count;
         if (spawnPositionsLength != 0 && obstaclePrefabsLength != 0)
-            StartCoroutine(Begin());
+            canStart = true;
     }
 
     void Update()
     {
-        if (beginSpawning && canSpawnObstacle)
+        if (canStart)
         {
-            StartCoroutine(Spawn());
+            //Spawn delay timer
+            spawnDelayTimeAccumulator += Time.deltaTime;
+            if (spawnDelayTimeAccumulator >= spawnDelayTime)
+            {
+                SpawnObstacles();
+                spawnDelayTimeAccumulator = 0f;
+            }
+
         }
-    }
-
-    IEnumerator Begin()
-    {
-        beginSpawning = false;
-        yield return new WaitForSeconds(beginDelayTime);
-        beginSpawning = true;
-    }
-
-    IEnumerator Spawn()
-    {
-        canSpawnObstacle = false;
-        SpawnObstacles();
-        yield return new WaitForSeconds(spawnDelayTime);
-        canSpawnObstacle = true;
     }
 
     private void SpawnObstacles()
@@ -59,9 +49,10 @@ public class spawnerScript : MonoBehaviour
             float correctYPos = CalculateYPosition(obstaclePrefabs[pair.Value]);
             float correctZPos = spawnPositions[pair.Key].z;
             Vector3 correctPos = new Vector3(correctXPos, correctYPos, correctZPos);
-            GameObject newObstacle = Instantiate(obstaclePrefabs[pair.Value], correctPos, Quaternion.identity);
-            Destroy(newObstacle, obstacleLifetime);
-
+            GameObject instantiatedObstacle = Instantiate(obstaclePrefabs[pair.Value], correctPos, Quaternion.identity);
+            instantiatedObstacle.AddComponent(typeof(ObstacleMove));
+            instantiatedObstacle.AddComponent(typeof(destroyObstacle));
+            instantiatedObstacle.GetComponent<destroyObstacle>().SetDestroyPosition(destroyZPosition);
         }
         occupiedPositions.Clear();
     }

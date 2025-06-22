@@ -768,7 +768,7 @@ Transform:
   m_GameObject: {fileID: 317913316}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.055938777, y: -0.032997534, z: 0.91168016}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -791,13 +791,12 @@ MonoBehaviour:
   - {fileID: 3512838313124027311, guid: 08d0f1e3aa556784da25b354ee85bb5c, type: 3}
   - {fileID: 1918983526271738201, guid: bba311a762ed42a4685ae437e3028b86, type: 3}
   spawnPositions:
-  - {x: -3.333333, y: 0, z: 26}
-  - {x: 0, y: 0, z: 26}
-  - {x: 3.333333, y: 0, z: 26}
-  spawnDelayTime: 5
-  beginDelayTime: 5
-  obstacleLifetime: 20
+  - {x: -3.333333, y: 0, z: 50}
+  - {x: 0, y: 0, z: 50}
+  - {x: 3.333333, y: 0, z: 50}
   alwaysSpawnMaxObstacles: 1
+  destroyZPosition: -8
+  spawnDelayTime: 5
 --- !u!114 &317913319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,6 +809,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712f100f594f87041aaea13a0b8033f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstaclesInitialSpeed: 5
+  difficultyIncreasePerSec: 0.02
+  obstaclesCurrentSpeed: 0
   playerRef: {fileID: 1754045780}
   timeScoreTextObj: {fileID: 150902101}
   gameOverPanel: {fileID: 539992047}
@@ -2988,8 +2990,8 @@ Transform:
   m_GameObject: {fileID: 1710527611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 53}
-  m_LocalScale: {x: 1, y: 1, z: 120}
+  m_LocalPosition: {x: 0, y: 0, z: 26.3}
+  m_LocalScale: {x: 1, y: 1, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1013598812}
