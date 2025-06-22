@@ -14,6 +14,11 @@ public class spawnerScript : MonoBehaviour
     [SerializeField] private float beginDelayTime;
     [SerializeField] private float obstacleLifetime = 5f;
 
+    [SerializeField] private bool alwaysSpawnMaxObstacles = false;
+
+    private bool beginSpawning = false;
+    private bool canSpawnObstacle = true;
+
     void Start()
     {
         spawnPositionsLength = spawnPositions.Count;
@@ -22,10 +27,27 @@ public class spawnerScript : MonoBehaviour
             StartCoroutine(Begin());
     }
 
+    void Update()
+    {
+        if (beginSpawning && canSpawnObstacle)
+        {
+            StartCoroutine(Spawn());
+        }
+    }
+
     IEnumerator Begin()
     {
+        beginSpawning = false;
         yield return new WaitForSeconds(beginDelayTime);
-        InvokeRepeating("SpawnObstacles", 0, spawnDelayTime);
+        beginSpawning = true;
+    }
+
+    IEnumerator Spawn()
+    {
+        canSpawnObstacle = false;
+        SpawnObstacles();
+        yield return new WaitForSeconds(spawnDelayTime);
+        canSpawnObstacle = true;
     }
 
     private void SpawnObstacles()
@@ -46,7 +68,11 @@ public class spawnerScript : MonoBehaviour
 
     private void RandomizeObstaclesAndPositions()
     {
-        int numOfObstacles = RandomizeElement(spawnPositionsLength) + 1;
+        int numOfObstacles;
+        if (alwaysSpawnMaxObstacles)
+            numOfObstacles = spawnPositionsLength;
+        else
+            numOfObstacles = RandomizeElement(spawnPositionsLength) + 1;
         Debug.Log("numObstacles: " + numOfObstacles);
         for (int i = 1; i <= numOfObstacles; i++)
         {
@@ -72,4 +98,5 @@ public class spawnerScript : MonoBehaviour
     {
         return obj.transform.localScale.y / 2;
     }
+
 }

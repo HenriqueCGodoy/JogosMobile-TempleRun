@@ -5,7 +5,11 @@ using UnityEngine.UI;
 
 public class GameControllerScript : MonoBehaviour
 {
+    public static GameControllerScript Instance;
     private float score = 0;
+    [SerializeField] private float obstaclesInitialSpeed = 5;
+    [SerializeField] public float difficultyIncreasePerSec = 0.02f;
+    public float obstaclesCurrentSpeed;
     [SerializeField] private GameObject playerRef;
     private PlayerMove playerScript;
     [SerializeField] private GameObject timeScoreTextObj;
@@ -15,12 +19,22 @@ public class GameControllerScript : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private Toggle accelerometerToggle;
+    
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+    }
 
     void Start()
     {
         Time.timeScale = 1;
         playerScript = playerRef.GetComponent<PlayerMove>();
         scoreText = timeScoreTextObj.GetComponent<TextMeshProUGUI>();
+        obstaclesCurrentSpeed = obstaclesInitialSpeed;
 
     }
 
@@ -42,7 +56,7 @@ public class GameControllerScript : MonoBehaviour
             GameOver();
         }
 
-        InvokeRepeating("UpdateUI", 0, 0.1f);
+        InvokeRepeating("UpdateUI", 0, 0.1f * Time.deltaTime);
     }
 
     private void GameOver()

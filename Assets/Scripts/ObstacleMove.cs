@@ -6,6 +6,9 @@ public class ObstacleMove : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.back * moveSpeed * Time.deltaTime);
+        if (GameControllerScript.Instance == null)
+            transform.Translate(Vector3.back * moveSpeed * Time.deltaTime, Space.World);
+        else
+            transform.Translate(Vector3.back * GameControllerScript.Instance.obstaclesCurrentSpeed * Time.deltaTime, Space.World);
     }
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2903948997427103117}
   - component: {fileID: 6270289522389445651}
   - component: {fileID: 1089390239880073778}
+  - component: {fileID: 7941069292132761565}
   m_Layer: 0
   m_Name: UpDownWall
   m_TagString: Obstacle
@@ -29,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 1918983526271738201}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 3.3333333, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 3.3333333, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -122,3 +123,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+--- !u!114 &7941069292132761565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918983526271738201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d3419c7058150545b4b6b6c48ce5913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  oscilationSpeed: 7
+  minHeight: 0.5
+  maxHeight: 7.5
