@@ -77,6 +77,7 @@ public class PlayerMove : MonoBehaviour
         {
             var screenPos = Input.mousePosition;
             horizontalSpeed = CalculateMovement(screenPos);
+            transform.Translate(horizontalSpeed, 0, 0);
         }
 
         // Check if we are running on mobile devices
@@ -87,7 +88,10 @@ public class PlayerMove : MonoBehaviour
             case MobileMovement.Accelerometer: 
                 /* Move player based on accelerometer 
                 direction */
-                horizontalSpeed = Input.acceleration.x * dodgeSpeed; 
+                //Accelerometer goes between -0.3 and +0.3
+                horizontalSpeed = ConvertAccelerometerXToPosition(Input.acceleration.x);
+                horizontalSpeed = Mathf.Clamp(horizontalSpeed, -4.5f, 4.5f);
+                transform.position = new Vector3(horizontalSpeed, transform.position.y, transform.position.z);
                 break; 
             case MobileMovement.ScreenTouch: 
                 /* Check if Input registered more than 
@@ -107,6 +111,7 @@ public class PlayerMove : MonoBehaviour
 
         rb.AddForce(horizontalSpeed, 0, 0, ForceMode.Force);
 
+        //Add extra downward force after the highest point of the jump
         if (rb.linearVelocity.y < 0)
         {
             rb.AddForce(0, -extraDownForce, 0);
@@ -164,6 +169,11 @@ public class PlayerMove : MonoBehaviour
 #endif
     }
 
+    private float ConvertAccelerometerXToPosition(float xValue)
+    {
+        return xValue * 15f;
+    }
+
     /// <summary>
     /// Will figure out where to move the player horizontaly
     /// </summary>
@@ -190,7 +200,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         //Replace horizontalSpeed with our own value
-        return xMove * dodgeSpeed;
+        return xMove * dodgeSpeed * Time.deltaTime;
     }
 
 
