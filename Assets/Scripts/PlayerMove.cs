@@ -69,6 +69,8 @@ public class PlayerMove : MonoBehaviour
     {
         //Check if we're moving to the side
         var horizontalSpeed = Input.GetAxis("Horizontal") * dodgeSpeed;
+        transform.Translate(new Vector3(horizontalSpeed, 0, 0));
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -4.5f, 4.5f), transform.position.y, transform.position.z); 
         isGrounded = Physics.CheckSphere(groundDetectionSpherePos, groundDetectionSphereRadius, ~LayerMask.NameToLayer("Ground"));
         // Check if we are running either in the Unity editor or in a standalone build
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_EDITOR
@@ -102,14 +104,14 @@ public class PlayerMove : MonoBehaviour
                     var firstTouch = Input.touches[0]; 
                     var screenPos = firstTouch.position; 
                     horizontalSpeed = CalculateMovement(screenPos);
+                    transform.Translate(new Vector3(horizontalSpeed, 0, 0));
+                    transform.position = new Vector3(Mathf.Clamp(transform.position.x, -4.5f, 4.5f), transform.position.y, transform.position.z); 
                 } 
                 break;
         }
 
 #endif
 
-
-        rb.AddForce(horizontalSpeed, 0, 0, ForceMode.Force);
 
         //Add extra downward force after the highest point of the jump
         if (rb.linearVelocity.y < 0)
