@@ -5,6 +5,7 @@ public class ShowAccelerometervalues : MonoBehaviour
 {
     private float accelerometerXValue;
     private TextMeshProUGUI accelerometerXText;
+    [SerializeField] private PlayerMove playerRef;
 
     void Start()
     {
@@ -15,7 +16,7 @@ public class ShowAccelerometervalues : MonoBehaviour
     void Update()
     {
         accelerometerXValue = Input.acceleration.x;
-        accelerometerXText.text = "X: " + accelerometerXValue;
+        accelerometerXText.text = "X: " + playerRef.horizontalSpeed;
     }
 
 

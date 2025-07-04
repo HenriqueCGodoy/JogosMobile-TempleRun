@@ -22,6 +22,9 @@ public class PlayerMove : MonoBehaviour
     [Tooltip("How fast the player moves left/right")]
     public float dodgeSpeed = 5;
 
+    [SerializeField] private float playerMaxSpeed = 10f;
+    [SerializeField] private float playerAcc = 10f;
+
     public enum MobileMovement
     {
         Accelerometer, ScreenTouch
@@ -54,6 +57,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float accelerometerJumpThreshold = 3;
     private bool canStartQueueJumpCoroutine = true;
     [SerializeField] private float extraDownForce = 0.5f;
+    [SerializeField] public float horizontalSpeed;
 
     void Start()
     {
@@ -68,7 +72,7 @@ public class PlayerMove : MonoBehaviour
     void FixedUpdate()
     {
         //Check if we're moving to the side
-        var horizontalSpeed = Input.GetAxis("Horizontal") * dodgeSpeed;
+        horizontalSpeed = Input.GetAxis("Horizontal") * dodgeSpeed;
         transform.Translate(new Vector3(horizontalSpeed, 0, 0));
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -4.5f, 4.5f), transform.position.y, transform.position.z); 
         isGrounded = Physics.CheckSphere(groundDetectionSpherePos, groundDetectionSphereRadius, ~LayerMask.NameToLayer("Ground"));
@@ -90,11 +94,12 @@ public class PlayerMove : MonoBehaviour
             case MobileMovement.Accelerometer: 
                 /* Move player based on accelerometer 
                 direction */
-                //Accelerometer goes between -0.3 and +0.3
-                horizontalSpeed = ConvertAccelerometerXToPosition(Input.acceleration.x);
-                horizontalSpeed = Mathf.Clamp(horizontalSpeed, -4.5f, 4.5f);
-                transform.position = new Vector3(horizontalSpeed, transform.position.y, transform.position.z);
-                break; 
+                horizontalSpeed = Input.acceleration.x * playerAcc;
+                horizontalSpeed = Mathf.Clamp(horizontalSpeed, -playerMaxSpeed, playerMaxSpeed);
+                if(Mathf.Abs(horizontalSpeed) >= 5)
+                    transform.Translate(horizontalSpeed * Time.deltaTime, 0, 0);
+                transform.position = new Vector3(Mathf.Clamp(transform.position.x, -4.5f, 4.5f), transform.position.y, transform.position.z);
+                break;
             case MobileMovement.ScreenTouch: 
                 /* Check if Input registered more than 
                 zero touches */
@@ -149,14 +154,11 @@ public class PlayerMove : MonoBehaviour
         switch(mobileMove)
         {
             case MobileMovement.Accelerometer:
-                bool tryJump = (Input.acceleration.z >= accelerometerJumpThreshold)?true:false;
-                if (tryJump && canStartQueueJumpCoroutine && !isGrounded)
-                {
-                    StartCoroutine(queueJump());
-                }
-                if((tryJump || queuedJump) && isGrounded)
-                {
-                    Jump();
+                if (Input.touchCount > 0) 
+                { 
+                    /* Store the first touch detected */
+                    Touch touch = Input.touches[0]; 
+                    SwipeJump(touch);
                 }
                 break;
             case MobileMovement.ScreenTouch:
@@ -171,10 +173,6 @@ public class PlayerMove : MonoBehaviour
 #endif
     }
 
-    private float ConvertAccelerometerXToPosition(float xValue)
-    {
-        return xValue * 15f;
-    }
 
     /// <summary>
     /// Will figure out where to move the player horizontaly

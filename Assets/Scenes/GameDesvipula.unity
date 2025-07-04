@@ -1128,6 +1128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff8f519fbf390c44bb9b04a05825cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerRef: {fileID: 1754045786}
 --- !u!114 &453534732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3439,6 +3440,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 10
   dodgeSpeed: 10
+  playerMaxSpeed: 30
+  playerAcc: 100
   mobileMove: 0
   minSwipeDistance: 0.25
   isGrounded: 0
@@ -3446,6 +3449,7 @@ MonoBehaviour:
   queueJumpTime: 0.2
   accelerometerJumpThreshold: 0.2
   extraDownForce: 10
+  horizontalSpeed: 0
 --- !u!1 &1810811469
 GameObject:
   m_ObjectHideFlags: 0
